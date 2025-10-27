@@ -876,12 +876,12 @@ async function mintOption() {
     log(`Sent tx: ${sig}`, 'success');
 
     logTxSent(sig, data && data.option_token_mint ? data.option_token_mint : null);
-    // await connection.confirmTransaction(sig);
+    await connection.confirmTransaction(sig);
 
 
 
-    // log(`🎉 Mint Confirmed: ${sig}`);
-    // UI.showAlert(`<i class="fas fa-check-circle me-2"></i>Mint successful! <a href="https://explorer.solana.com/tx/${sig}?cluster=devnet" target="_blank" class="text-decoration-none">View on Explorer</a>`, 'success');
+    log(`🎉 Mint Confirmed: ${sig}`);
+    UI.showAlert(`<i class="fas fa-check-circle me-2"></i>Mint successful! <a href="https://explorer.solana.com/tx/${sig}?cluster=devnet" target="_blank" class="text-decoration-none">View on Explorer</a>`, 'success');
 
   } catch (err) {
     console.error("Mint option error:", err);
