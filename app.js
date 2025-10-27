@@ -16,8 +16,8 @@ const connection = new Connection(
 
 // Add configurable API base so frontend works on GitHub Pages or production
 const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-  ? 'http://127.0.0.1:3000'
-  : 'https://api.yourdomain.com'; // <-- replace with your real backend URL in production
+  ? 'https://api.optmachine.xyz'
+  : 'https://api.optmachine.xyz'; // <-- replace with your real backend URL in production
 
 // UI State Management
 const UI = {
@@ -1269,7 +1269,7 @@ async function parsePoolAccount() {
 
     // swap-pool input 填入 data.creator（若无则回退为解析的 poolAccount）
     const swapPoolInput = document.getElementById('swap-pool');
-    if (swapPoolInput) swapPoolInput.value = poolAccount ||'';
+    if (swapPoolInput) swapPoolInput.value = poolAccount || '';
 
     // 显示结果区域（默认可能已显示）
     const resultBox = document.getElementById('pool-parser-result');
