@@ -564,7 +564,7 @@ input.form-control.ctrl-active::placeholder {
   min-width: 56px;
   height: 26px;
   padding: 0 8px;
-  background: linear-gradient(180deg,#87ed96,#a163e0); /* 可换颜色 */
+  background: linear-gradient(180deg,#21e03e,#5b25e3); /* 可换颜色 */
   color: #fff;
   font-weight: 700;
   font-size: 0.75rem;

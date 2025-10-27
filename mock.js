@@ -19,7 +19,7 @@ const MockAPI = {
   // 检查后端是否可用
   async checkBackendStatus() {
     try {
-      const response = await fetch("http://127.0.0.1:3000/", { 
+      const response = await fetch("https://api.optmachine.xyz", { 
         method: 'GET',
         timeout: 3000 
       });
@@ -38,7 +38,7 @@ async function callCreateAPI(requestData) {
   if (backendAvailable) {
     // 使用真实后端
     console.log("🌐 使用真实后端 API");
-    const response = await fetch("http://127.0.0.1:3000/create", {
+    const response = await fetch("https://api.optmachine.xyz/create", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(requestData)

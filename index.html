@@ -51,9 +51,9 @@
     <!-- Header Section -->
     <div class="row justify-content-center mb-5">
       <div class="col-lg-8 text-center">
-        <h1 class="display-4 mb-3 fade-in">
+        <h1 class="display-1 mb-3 fade-in">
           <i class="fas fa-rocket me-3"></i>
-          Solana Options Trading
+          OptMachine
         </h1>
         <p class="lead text-muted fade-in">
           Create and trade decentralized options on the Solana blockchain
@@ -397,13 +397,13 @@
                     <div class="col-md-6">
                       <label for="underlying-mint" class="form-label">Underlying Mint</label>
                       <input type="text" class="form-control" id="underlying-mint"
-                        value="7TGGc34BHydnkHtEw2LSGq6FWRbUjzuDsZ1uYuoWK4ND" spellcheck="false">
+                        value="CRLQpVF8E6bqoyFWX9tv9eiwfUekYYYbGFBeawGuTrR2" spellcheck="false">
                       <div id="underlying-mint-hint" class="form-text text-muted"></div>
                     </div>
                     <div class="col-md-6">
                       <label for="quote-mint" class="form-label">Quote Mint</label>
                       <input type="text" class="form-control" id="quote-mint"
-                        value="Fo9qqxhckVQaobFRdLszwy5KnnjzDmdQsWryH5wNPYY8" spellcheck="false">
+                        value="7URnBJmozJjCi31oMH6ju6joM5LwaLa49NK2aVJfBZYz" spellcheck="false">
                       <div id="quote-mint-hint" class="form-text text-muted"></div>
                     </div>
                   </div>
@@ -637,11 +637,11 @@
           <div class="d-flex ms-auto">
             <button id="execute-all" class="btn btn-primary btn-sm" disabled>
               <i class="fas fa-play me-1"></i>
-              执行全部
+              create all
             </button>
             <button id="remove-all" class="btn btn-outline-danger btn-sm ms-2" disabled>
               <i class="fas fa-trash me-1"></i>
-              删除全部
+              delete all
             </button>
           </div>
         </div>
@@ -655,7 +655,7 @@
                 <th>Strike</th>
                 <th>Size</th>
                 <th>Expires</th>
-                <th>操作</th>
+                <th>Delete</th>
               </tr>
             </thead>
             <tbody>
@@ -664,8 +664,8 @@
           </table>
         </div>
         <div class="card-footer text-end">
-          <button id="execute-selected" class="btn btn-success btn-sm me-2" disabled>执行选中</button>
-          <button id="remove-selected" class="btn btn-danger btn-sm" disabled>删除选中</button>
+          <button id="execute-selected" class="btn btn-success btn-sm me-2" disabled>create selected</button>
+          <button id="remove-selected" class="btn btn-danger btn-sm" disabled>delete selected</button>
         </div>
       </div>
     </div>
