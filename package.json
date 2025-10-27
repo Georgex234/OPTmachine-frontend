@@ -1,0 +1,47 @@
+{
+  "name": "optmachine-frontend",
+  "version": "1.0.0",
+  "description": "Solana Options Trading DApp Frontend",
+  "main": "index.html",
+  "scripts": {
+    "start": "live-server --port=8080 --open=/",
+    "serve": "python -m http.server 8080",
+    "test": "jest",
+    "lint": "eslint *.js",
+    "format": "prettier --write *.{js,html,css,md}",
+    "build": "echo 'Static site - no build required'",
+    "deploy": "echo 'Add your deployment script here'"
+  },
+  "keywords": [
+    "solana",
+    "defi",
+    "options",
+    "trading",
+    "dapp",
+    "blockchain",
+    "web3"
+  ],
+  "author": "OptMachine Team",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^8.0.0",
+    "jest": "^29.0.0",
+    "live-server": "^1.2.2",
+    "prettier": "^3.0.0",
+    "@playwright/test": "^1.40.0"
+  },
+  "dependencies": {},
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/optmachine-frontend"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/optmachine-frontend/issues"
+  },
+  "homepage": "https://your-username.github.io/optmachine-frontend"
+}

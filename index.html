@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OptMachine - Solana Options Trading</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <i class="fas fa-chart-line me-2"></i>
+        OptMachine
+      </a>
+
+      <!-- 新增：Airdrop 按钮 -->
+      <div class="ms-3">
+        <button id="airdrop-btn" class="btn btn-success btn-lg px-3">
+          <i class="fas fa-gift me-1"></i> Airdrop
+          <span id="airdrop-spinner" class="spinner-border spinner-border-sm ms-2" style="display:none;"></span>
+        </button>
+      </div>
+
+
+      <div class="navbar-nav ms-auto">
+        <div class="nav-item">
+          <span id="wallet-status" class="nav-link">
+            <span class="status-indicator status-disconnected"></span>
+            <div id="wallet-status-text">Not Connected</div>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-5">
+    <!-- Header Section -->
+    <div class="row justify-content-center mb-5">
+      <div class="col-lg-8 text-center">
+        <h1 class="display-4 mb-3 fade-in">
+          <i class="fas fa-rocket me-3"></i>
+          Solana Options Trading
+        </h1>
+        <p class="lead text-muted fade-in">
+          Create and trade decentralized options on the Solana blockchain
+        </p>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="row justify-content-center  align-items-stretch">
+      <!-- Left Column: Wallet Connection and Mint Option -->
+      <div class="col-lg-6 mb-4">
+        <!-- Wallet Connection Card -->
+        <div class="card fade-in mb-4 wallet-card">
+          <div class="card-header">
+            <h5 class="card-title mb-0">
+              <i class="fas fa-wallet me-2"></i>
+              Wallet Connection
+            </h5>
+          </div>
+          <div class="card-body">
+            <div id="wallet-info" class="mb-3" style="display: none;">
+              <div class="alert alert-success">
+                <i class="fas fa-check-circle me-2"></i>
+                <strong>Connected:</strong>
+                <div id="wallet-address" class="font-monospace small mt-1"></div>
+              </div>
+            </div>
+
+            <button id="connect" class="btn btn-primary btn-lg w-100">
+              <i class="fas fa-plug me-2"></i>
+              <span id="connect-text">Connect Wallet</span>
+              <span id="connect-spinner" class="spinner-border spinner-border-sm ms-2" style="display: none;"></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Combined Mint / Exercise Card with Tabs -->
+        <div class="card fade-in mint-exercise-card">
+          <div class="card-header p-0">
+            <ul class="nav nav-tabs card-header-tabs" id="mintExerciseTabs" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="tab-mint" data-bs-toggle="tab" data-bs-target="#pane-mint"
+                  type="button" role="tab" aria-controls="pane-mint" aria-selected="true">
+                  <i class="fas fa-coins me-1"></i> Mint
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-exercise" data-bs-toggle="tab" data-bs-target="#pane-exercise"
+                  type="button" role="tab" aria-controls="pane-exercise" aria-selected="false">
+                  <i class="fas fa-gavel me-1"></i> Exercise
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-amm" data-bs-toggle="tab" data-bs-target="#pane-amm" type="button"
+                  role="tab" aria-controls="pane-amm" aria-selected="false">
+                  <i class="fas fa-water me-1"></i> Create Pool
+                </button>
+              </li>
+
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-add-liquidity" data-bs-toggle="tab"
+                  data-bs-target="#pane-add-liquidity" type="button" role="tab" aria-controls="pane-add-liquidity"
+                  aria-selected="false">
+                  <i class="fas fa-layer-group me-1"></i> First Add Liquidity
+                </button>
+              </li>
+              <!-- 新增：Deposit A（针对 /add 接口） -->
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-deposit-a" data-bs-toggle="tab" data-bs-target="#pane-deposit-a"
+                  type="button" role="tab" aria-controls="pane-deposit-a" aria-selected="false">
+                  <i class="fas fa-plus me-1"></i> Add Liquidity
+                </button>
+              </li>
+              <!-- 新增：Swap Tab（与其他 tabs 并列） -->
+              <!-- <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-swap" data-bs-toggle="tab" data-bs-target="#pane-swap" type="button"
+                  role="tab" aria-controls="pane-swap" aria-selected="false">
+                  <i class="fas fa-exchange-alt me-1"></i> Swap
+                </button>
+              </li> -->
+
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-reclaim" data-bs-toggle="tab" data-bs-target="#pane-reclaim"
+                  type="button" role="tab" aria-controls="pane-reclaim" aria-selected="false">
+                  <i class="fas fa-undo-alt me-1"></i> Reclaim
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          <div class="card-body">
+            <div class="tab-content" id="mintExerciseContent">
+              <!-- Mint Pane -->
+              <div class="tab-pane fade show active" id="pane-mint" role="tabpanel" aria-labelledby="tab-mint">
+                <form id="mint-option-form">
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="option-mint" class="form-label">Option Mint</label>
+                      <input type="text" class="form-control" id="option-mint" placeholder="Enter Option Mint Address"
+                        spellcheck="false">
+                      <div id="option-mint-hint" class="form-text text-muted"></div>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="mint-amount" class="form-label">Mint Amount</label>
+                      <input type="number" class="form-control" id="mint-amount" value="1" min="1" step="1"
+                        inputmode="numeric" pattern="\d*">
+                      <div id="mint-amount-warning" class="form-text text-danger mt-1" style="display: none;"></div>
+                    </div>
+                  </div>
+                  <button id="mint" type="button" class="btn btn-primary btn-lg w-100">
+                    <i class="fas fa-coins me-2"></i>
+                    <span id="mint-text">Mint Option</span>
+                    <span id="mint-spinner" class="spinner-border spinner-border-sm ms-2" style="display: none;"></span>
+                  </button>
+                </form>
+              </div>
+
+              <!-- Exercise Pane -->
+              <div class="tab-pane fade" id="pane-exercise" role="tabpanel" aria-labelledby="tab-exercise">
+                <form id="exercise-option-form">
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="exercise-option-mint" class="form-label">Option Mint</label>
+                      <input type="text" class="form-control" id="exercise-option-mint"
+                        placeholder="Enter Option Mint Address" spellcheck="false">
+                      <div id="exercise-option-mint-hint" class="form-text text-muted"></div>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="exercise-amount" class="form-label">Exercise Amount</label>
+                      <input type="number" class="form-control" id="exercise-amount" value="1" min="1" step="1"
+                        inputmode="numeric" pattern="\d*">
+                      <div id="exercise-amount-warning" class="form-text text-danger mt-1" style="display: none;"></div>
+                    </div>
+                  </div>
+                  <button id="exercise" type="button" class="btn btn-success btn-lg w-100" disabled>
+                    <i class="fas fa-play me-2"></i>
+                    <span id="exercise-text">Exercise Option</span>
+                    <span id="exercise-spinner" class="spinner-border spinner-border-sm ms-2"
+                      style="display: none;"></span>
+                  </button>
+                </form>
+              </div>
+              <!-- AMM Pane（新增） -->
+              <div class="tab-pane fade" id="pane-amm" role="tabpanel" aria-labelledby="tab-amm">
+                <form id="amm-form">
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="amm-mint-a" class="form-label">Mint A (Must Be Option Token) </label>
+                      <input type="text" class="form-control" id="amm-mint-a" placeholder="Enter Mint A"
+                        spellcheck="false">
+                      <div id="amm-mint-a-hint" class="form-text text-muted"></div>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="amm-mint-b" class="form-label">Mint B </label>
+                      <input type="text" class="form-control" id="amm-mint-b" placeholder="Enter Mint B"
+                        spellcheck="false">
+                      <div id="amm-mint-b-hint" class="form-text text-muted"></div>
+                    </div>
+                  </div>
+
+                  <button id="createAmm" type="button" class="btn btn-info btn-lg w-100" disabled>
+                    <i class="fas fa-plus me-2"></i>
+                    <span id="createAmm-text">Create AMM Pool</span>
+                    <span id="createAmm-spinner" class="spinner-border spinner-border-sm ms-2"
+                      style="display: none;"></span>
+                  </button>
+                </form>
+              </div>
+              <!-- 新增：Add Liquidity Pane（并列） -->
+              <div class="tab-pane fade" id="pane-add-liquidity" role="tabpanel" aria-labelledby="tab-add-liquidity">
+                <form id="add-liquidity-form">
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="pool-address" class="form-label">Pool Account</label>
+                      <input type="text" class="form-control" id="pool-address"
+                        placeholder="Pool account from Create AMM" spellcheck="false">
+                    </div>
+                    <div class="col-md-3">
+                      <label for="add-amount-a" class="form-label">Amount A</label>
+                      <input type="number" class="form-control" id="add-amount-a" value="1" min="0" step="1">
+                    </div>
+                    <div class="col-md-3">
+                      <label for="add-amount-b" class="form-label">Amount B</label>
+                      <input type="number" class="form-control" id="add-amount-b" value="1" min="0" step="1">
+                    </div>
+                  </div>
+
+                  <button id="firstAddLiquidity" type="button" class="btn btn-primary btn-lg w-100" disabled>
+                    <i class="fas fa-droplet me-2"></i>
+                    <span id="firstAddLiquidity-text">Add Initial Liquidity</span>
+                    <span id="firstAddLiquidity-spinner" class="spinner-border spinner-border-sm ms-2"
+                      style="display: none;"></span>
+                  </button>
+                </form>
+              </div>
+
+              <!-- 新增：Deposit A Pane -->
+              <div class="tab-pane fade" id="pane-deposit-a" role="tabpanel" aria-labelledby="tab-deposit-a">
+                <form id="deposit-a-form">
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="deposit-pool" class="form-label">Pool Account</label>
+                      <input type="text" class="form-control" id="deposit-pool" placeholder="Pool account pubkey"
+                        spellcheck="false">
+                    </div>
+                    <div class="col-md-6">
+                      <label for="deposit-amount-a" class="form-label">Deposit A </label>
+                      <input type="number" class="form-control" id="deposit-amount-a" value="1000000" min="0" step="1">
+                    </div>
+                  </div>
+
+                  <div class="d-grid mb-3">
+                    <button id="deposit-a-btn" type="button" class="btn btn-primary btn-lg w-100">
+                      <i class="fas fa-plus-circle me-2"></i> Deposit A
+                      <span id="deposit-a-spinner" class="spinner-border spinner-border-sm ms-2"
+                        style="display:none;"></span>
+                    </button>
+                  </div>
+                </form>
+
+                <div id="deposit-a-result" class="mt-3" style="display:none;">
+                  <div class="card">
+                    <div class="card-body">
+                      <h6 class="card-title">Deposit Result</h6>
+                      <div id="deposit-a-message" class="small"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- 新增：Swap Pane（并列） -->
+              <!-- <div class="tab-pane fade" id="pane-swap" role="tabpanel" aria-labelledby="tab-swap">
+                <form id="swap-form">
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="swap-pool" class="form-label">Pool Account</label>
+                      <input type="text" class="form-control" id="swap-pool" placeholder="Pool account from Create AMM"
+                        spellcheck="false">
+                    </div>
+                    <div class="col-md-3">
+                      <label for="swap-amount" class="form-label">Amount In</label>
+                      <input type="number" class="form-control" id="swap-amount" value="1" min="0" step="any">
+                    </div>
+                    <div class="col-md-3">
+                      <label for="swap-direction" class="form-label">Direction</label>
+                      <select id="swap-direction" class="form-select">
+                        <option value="true">A → B</option>
+                        <option value="false">B → A</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <button id="swap" type="button" class="btn btn-outline-primary btn-lg w-100" disabled>
+                    <i class="fas fa-exchange-alt me-2"></i>
+                    <span id="swap-text">Swap</span>
+                    <span id="swap-spinner" class="spinner-border spinner-border-sm ms-2" style="display: none;"></span>
+                  </button>
+                </form>
+              </div> -->
+
+              <!-- 新增：Reclaim Pane -->
+              <div class="tab-pane fade" id="pane-reclaim" role="tabpanel" aria-labelledby="tab-reclaim">
+                <form id="reclaim-form">
+                  <div class="mb-3">
+                    <label for="reclaim-option-mint" class="form-label">Option Mint</label>
+                    <input type="text" class="form-control" id="reclaim-option-mint"
+                      placeholder="Enter option mint pubkey" spellcheck="false">
+                  </div>
+
+                  <div class="d-grid mb-3">
+                    <button id="reclaim-btn" type="button" class="btn btn-outline-danger btn-lg w-100">
+                      <i class="fas fa-undo-alt me-2"></i> Reclaim
+                      <span id="reclaim-spinner" class="spinner-border spinner-border-sm ms-2"
+                        style="display:none;"></span>
+                    </button>
+                  </div>
+                </form>
+
+                <div id="reclaim-result" class="mt-3" style="display:none;">
+                  <div class="card">
+                    <div class="card-body">
+                      <h6 class="card-title">Reclaim Result</h6>
+                      <div class="mb-2"><strong>Unsigned Tx:</strong></div>
+                      <pre id="reclaim-unsigned-tx" class="small"
+                        style="white-space:pre-wrap;word-break:break-word;"></pre>
+                      <div class="d-flex gap-2 mt-2">
+                        <button id="reclaim-copy" class="btn btn-sm btn-secondary">Copy</button>
+                        <button id="reclaim-open" class="btn btn-sm btn-outline-primary">Open in external tool</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Option Creation and Pool Parser -->
+      <div class="col-lg-6 mb-4">
+        <div class="card fade-in">
+          <div class="card-header p-0">
+            <ul class="nav nav-tabs card-header-tabs" id="OptionPoolTabs" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="tab-option" data-bs-toggle="tab" data-bs-target="#pane-creat-option"
+                  type="button" role="tab" aria-controls="pane-creat-option" aria-selected="true">
+                  <i class="fas fa-coins me-1"></i> Create Option
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-pool" data-bs-toggle="tab" data-bs-target="#pane-pool-parser"
+                  type="button" role="tab" aria-controls="pane-pool-parser" aria-selected="true">
+                  <i class="fas fa-water me-1"></i> Pool Parser
+                </button>
+              </li>
+              <!-- 新增：Option Parser Tab -->
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-option-parser" data-bs-toggle="tab"
+                  data-bs-target="#pane-option-parser" type="button" role="tab" aria-controls="pane-option-parser"
+                  aria-selected="false">
+                  <i class="fas fa-search me-1"></i> Option Parser
+                </button>
+              </li>
+              <!-- Move Swap here: aligns with Option Parser -->
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-swap" data-bs-toggle="tab" data-bs-target="#pane-swap" type="button"
+                  role="tab" aria-controls="pane-swap" aria-selected="false">
+                  <i class="fas fa-exchange-alt me-1"></i> Swap
+                </button>
+              </li>
+            </ul>
+          </div>
+          <div class="card-body">
+            <div class="tab-content" id="OptionPoolContent">
+              <!-- 原有：Create Option Pane -->
+              <div class="tab-pane fade show active" id="pane-creat-option" role="tabpanel"
+                aria-labelledby="tab-option">
+
+                <!-- Option Parameters Form -->
+                <form id="option-form">
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="underlying-mint" class="form-label">Underlying Mint</label>
+                      <input type="text" class="form-control" id="underlying-mint"
+                        value="7TGGc34BHydnkHtEw2LSGq6FWRbUjzuDsZ1uYuoWK4ND" spellcheck="false">
+                      <div id="underlying-mint-hint" class="form-text text-muted"></div>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="quote-mint" class="form-label">Quote Mint</label>
+                      <input type="text" class="form-control" id="quote-mint"
+                        value="Fo9qqxhckVQaobFRdLszwy5KnnjzDmdQsWryH5wNPYY8" spellcheck="false">
+                      <div id="quote-mint-hint" class="form-text text-muted"></div>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="contract-size" class="form-label">Contract Size</label>
+                      <input type="number" class="form-control" id="contract-size" value="1" min="1" step="1"
+                        inputmode="numeric" pattern="\d*">
+                      <div id="contract-size-warning" class="form-text text-danger mt-1" style="display: none;"></div>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="strike-price" class="form-label">Strike Price</label>
+                      <div class="input-group">
+                        <input type="number" class="form-control" id="strike-price" value="100" min="0" step="1">
+                      </div>
+                      <div id="strike-price-warning" class="form-text text-danger mt-1" style="display: none;"></div>
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="expiration-date" class="form-label">Expiration Date</label>
+                    <input type="datetime-local" class="form-control" id="expiration-date">
+                  </div>
+                  <button id="create" type="submit" class="btn btn-success btn-lg w-100" disabled>
+                    <i class="fas fa-rocket me-2"></i>
+                    <span id="create-text">Create Option right now</span>
+                    <span id="create-spinner" class="spinner-border spinner-border-sm ms-2"
+                      style="display: none;"></span>
+                  </button>
+
+                  <button id="add-to-cart" type="button" class="btn btn-warning btn-lg w-100" disabled>
+                    <i class="fas fa-cart-plus me-2"></i>
+                    <span id="add-to-cart-text">Add To Cart</span>
+                    <span id="add-to-cart-spinner" class="spinner-border spinner-border-sm ms-2"
+                      style="display: none;"></span>
+                  </button>
+                </form>
+              </div>
+
+              <!-- 新增：Pool Parser Pane -->
+              <div class="tab-pane fade" id="pane-pool-parser" role="tabpanel" aria-labelledby="tab-pool">
+                <form id="pool-parser-form">
+                  <div class="mb-3">
+                    <label for="pool-account" class="form-label">Pool Account</label>
+                    <input type="text" class="form-control" id="pool-account" placeholder="Enter pool account pubkey"
+                      spellcheck="false">
+                  </div>
+
+                  <div class="d-grid mb-3">
+                    <button id="parse-pool" type="button" class="btn btn-primary btn-lg w-100">
+                      <i class="fas fa-search me-2 b"></i> Pool Parser
+                      <span id="parse-pool-spinner" class="spinner-border spinner-border-sm ms-2"
+                        style="display:none;"></span>
+                    </button>
+                  </div>
+                </form>
+
+                <div id="pool-parser-result" class="mt-3" style="display:none;">
+                  <div class="card">
+                    <div class="card-body">
+                      <h6 class="card-title">Pool Summary</h6>
+                      <div class="row mb-2">
+                        <div class="col-md-6"><strong>Creator:</strong> <span id="pp-creator"
+                            class="font-monospace"></span></div>
+                        <div class="col-md-6"><strong>Expiration:</strong> <span id="pp-expiration"></span></div>
+                      </div>
+                      <hr>
+                      <h6>Reserves</h6>
+                      <div class="row mb-2">
+                        <div class="col-md-6">
+                          <strong>mint_a:</strong> <span id="pp-token-a-mint" class="font-monospace"></span><br>
+                        </div>
+                        <div class="col-md-6">
+                          <strong>mint_b:</strong> <span id="pp-token-b-mint" class="font-monospace"></span><br>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 新增：Option Parser Pane -->
+              <div class="tab-pane fade" id="pane-option-parser" role="tabpanel" aria-labelledby="tab-option-parser">
+                <form id="option-parser-form">
+                  <div class="mb-3">
+                    <label for="option-mint-input" class="form-label">Option Mint</label>
+                    <input type="text" class="form-control" id="option-mint-input"
+                      placeholder="Enter option mint pubkey" spellcheck="false">
+                  </div>
+                  <div class="d-grid mb-3">
+                    <button id="parse-option" type="button" class="btn btn-primary btn-lg w-100">
+                      <i class="fas fa-search me-2"></i> Parse Option
+                      <span id="parse-option-spinner" class="spinner-border spinner-border-sm ms-2"
+                        style="display:none;"></span>
+                    </button>
+                  </div>
+                </form>
+
+                <div id="option-parser-result" class="mt-3" style="display:none;">
+                  <div class="card">
+                    <div class="card-body">
+                      <h6 class="card-title">Option Summary</h6>
+                      <div class="row mb-2">
+                        <div class="col-md-6"><strong>Creator:</strong> <span id="op-creator"
+                            class="font-monospace"></span></div>
+                        <div class="col-md-6"><strong>Option Mint:</strong> <span id="op-option-mint"
+                            class="font-monospace"></span></div>
+                      </div>
+                      <hr>
+                      <div class="row mb-2">
+                        <div class="col-md-6"><strong>Underlying:</strong> <span id="op-underlying"
+                            class="font-monospace"></span></div>
+                        <div class="col-md-6"><strong>Quote:</strong> <span id="op-quote" class="font-monospace"></span>
+                        </div>
+                      </div>
+                      <div class="row mb-2">
+                        <div class="col-md-6"><strong>Expiration:</strong> <span id="op-expiration"></span></div>
+                        <div class="col-md-6"><strong>Contract Size:</strong> <span id="op-contract-size"></span></div>
+                      </div>
+                      <div class="row mb-2">
+                        <div class="col-md-6"><strong>Strike Price:</strong> <span id="op-strike-price"></span></div>
+                        <div class="col-md-6"><strong>Total Supply:</strong> <span id="op-total-supply"></span></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 在右侧 tab-content 中新增 Swap Pane（把原来左侧的 pane-swap 移到这里） -->
+              <div class="tab-pane fade" id="pane-swap" role="tabpanel" aria-labelledby="tab-swap">
+                <form id="swap-form">
+                  <div class="row mb-3">
+                    <!-- 第一行：swap-pool 与 swap-amount 共占一行 -->
+                    <div class="col-md-8">
+                      <label for="swap-pool" class="form-label">Pool Account</label>
+                      <input type="text" class="form-control" id="swap-pool" placeholder="Pool account from Create AMM"
+                        spellcheck="false">
+                    </div>
+                    <div class="col-md-4">
+                      <label for="swap-amount" class="form-label">Amount In</label>
+                      <input type="number" class="form-control" id="swap-amount" value="1" min="0" step="any">
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <!-- 第一行：mint_a（全宽） -->
+                    <div class="col-12">
+                      <label class="small text-muted">From</label>
+                      <div id="swap-mint-a" class="font-monospace token-block p-2 rounded-3 bg-dark text-white">
+                        mint-a
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3 justify-content-center">
+                    <!-- 第二行：中间圆形按钮（居中） -->
+                    <div class="col-auto d-flex justify-content-center align-items-center">
+                      <button id="swap-toggle-btn" type="button" class="btn swap-toggle-btn"
+                        title="Toggle swap direction" aria-pressed="false">
+                        <i class="fas fa-exchange-alt"></i>
+                      </button>
+                      <!-- 隐藏 input 保存方向（true: A→B，false: B→A） -->
+                      <input type="hidden" id="swap-direction" value="true">
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <!-- 第三行：mint_b（全宽） -->
+                    <div class="col-12">
+                      <label class="small text-muted">To</label>
+                      <div id="swap-mint-b" class="font-monospace token-block p-2 rounded-3 bg-dark text-white">
+                        mint-b
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- 隐藏 input 保存方向（true: A→B，false: B→A） -->
+
+                  <input type="hidden" id="swap-direction" value="true">
+                  <button id="swap" type="button" class="btn btn-outline-primary btn-lg w-100" disabled>
+                    <i class="fas fa-exchange-alt me-2"></i>
+                    <span id="swap-text">Swap</span>
+                    <span id="swap-spinner" class="spinner-border spinner-border-sm ms-2" style="display: none;"></span>
+                  </button>
+              </div>
+            </div>
+
+            <!-- <button id="swap" type="button" class="btn btn-outline-primary btn-lg w-100" disabled>
+              <i class="fas fa-exchange-alt me-2"></i>
+              <span id="swap-text">Swap</span>
+              <span id="swap-spinner" class="spinner-border spinner-border-sm ms-2" style="display: none;"></span>
+            </button> -->
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Transaction Sent Log -->
+  <div class="row justify-content-center mb-4">
+    <div class="col-lg-12">
+      <div class="card fade-in">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="card-title mb-0">
+            <i class="fas fa-paper-plane me-2"></i>
+            Transaction Sent Log
+          </h5>
+          <button id="clear-tx-log" class="btn btn-outline-secondary btn-sm">
+            <i class="fas fa-trash me-1"></i>
+            Clear
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="log-container p-3">
+            <pre id="tx-log" class="mb-0 text-light small"></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Option Cart List -->
+  <div class="row justify-content-center mb-4">
+    <div class="col-lg-12">
+      <div class="card fade-in">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="card-title mb-0">
+            <i class="fas fa-list me-2"></i>
+            Option Cart
+          </h5>
+          <div class="d-flex ms-auto">
+            <button id="execute-all" class="btn btn-primary btn-sm" disabled>
+              <i class="fas fa-play me-1"></i>
+              执行全部
+            </button>
+            <button id="remove-all" class="btn btn-outline-danger btn-sm ms-2" disabled>
+              <i class="fas fa-trash me-1"></i>
+              删除全部
+            </button>
+          </div>
+        </div>
+        <div class="card-body p-0">
+          <table class="table table-hover mb-0" id="cart-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Underlying</th>
+                <th>Quote</th>
+                <th>Strike</th>
+                <th>Size</th>
+                <th>Expires</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- 动态插入 -->
+            </tbody>
+          </table>
+        </div>
+        <div class="card-footer text-end">
+          <button id="execute-selected" class="btn btn-success btn-sm me-2" disabled>执行选中</button>
+          <button id="remove-selected" class="btn btn-danger btn-sm" disabled>删除选中</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Transaction Log -->
+  <div class="row justify-content-center">
+    <div class="col-lg-12">
+      <div class="card fade-in">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="card-title mb-0">
+            <i class="fas fa-history me-2"></i>
+            Transaction Log
+          </h5>
+          <button id="clear-log" class="btn btn-outline-secondary btn-sm">
+            <i class="fas fa-trash me-1"></i>
+            Clear
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="log-container p-3">
+            <pre id="log" class="mb-0 text-light small"></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Solana Web3 -->
+  <script src="https://unpkg.com/@solana/web3.js@1.95.3/lib/index.iife.js"></script>
+
+  <!-- Custom scripts -->
+  <script src="config.js"></script>
+  <script src="utils.js"></script>
+  <!-- <script src="features.js"></script> -->
+  <script src="mock.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>

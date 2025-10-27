@@ -1,0 +1,559 @@
+:root {
+  --primary-color: #6366f1;
+  --secondary-color: #8b5cf6;
+  --success-color: #10b981;
+  --danger-color: #ef4444;
+  --dark-bg: #1f2937;
+  --card-bg: #374151;
+}
+
+body {
+  background: linear-gradient(135deg, var(--dark-bg) 0%, #111827 100%);
+  color: white;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+}
+
+.navbar {
+  background: rgba(31, 41, 55, 0.95) !important;
+  backdrop-filter: blur(10px);
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid #4b5563;
+  backdrop-filter: blur(10px);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
+}
+
+.status-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: flex;
+  margin-right: 8px;
+}
+
+.status-connected {
+  background-color: var(--success-color);
+}
+
+.status-disconnected {
+  background-color: var(--danger-color);
+}
+
+.log-container {
+  background: #111827;
+  border: 1px solid #374151;
+  border-radius: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+  overflow: auto;
+  /* 超出时显示滚动条 */
+}
+
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#wallet-status {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.alert-center {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2000;
+  min-width: 320px;
+  max-width: 90vw;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s;
+}
+
+.alert-center.show {
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 0.8s;
+}
+
+.alert-center.hide {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s;
+}
+
+.btn-close:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.ctrl-active {
+  color: #0d6efd !important;
+  cursor: pointer;
+  background-color: #e7f1ff;
+}
+
+
+/* .cart-address-cell {
+  max-width: 180px;          
+  overflow-x: auto;
+  white-space: nowrap;
+  vertical-align: middle;
+  padding: 0 !important;
+}
+
+.cart-address {
+  display: inline-block;
+  min-width: 80%;
+  white-space: nowrap;
+} */
+.cart-address {
+  display: inline-block;
+  max-width: 240px;
+  overflow-x: auto;
+  /* white-space: nowrap; */
+  vertical-align: middle;
+}
+
+/* #log {
+  max-height: 300px;
+  overflow: auto;
+} */
+
+/* 保证 Mint / Exercise 分页内容区高度一致 */
+/* .mint-exercise-card .tab-content {
+  min-height: 130px; 
+} */
+
+/* 保证按钮和表单在切换时不会抖动，保持一致内边距 */
+/* .mint-exercise-card .card-body {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+} */
+
+/* 若两侧表单高度不一致，可让内部垂直居中（可选） */
+/* .mint-exercise-card .tab-pane .row {
+  align-items: center;
+} */
+
+/* 使左右列等高，内部卡片垂直填充 */
+.row.align-items-stretch>.col-lg-6 {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 让卡片在列中填满可用高度 */
+.row.align-items-stretch>.col-lg-6>.card {
+  flex: 1 1 auto;
+}
+
+.row.align-items-stretch>.col-lg-6>.wallet-card {
+  flex: 1 1 auto;
+  /* wallet 卡片保持原高度 */
+}
+
+/* 如果列中有多个 card（例如 wallet + mint-exercise），保持 wallet 高度不撑满，
+   只让目标 card 填充：例如 .mint-exercise-card 伸展 */
+.row.align-items-stretch>.col-lg-6>.mint-exercise-card {
+  flex: 1 1 auto;
+}
+
+/* 保证 tab 内容区域最小高度一致（可按需调整数值） */
+.mint-exercise-card .tab-content {
+  min-height: 100px;
+}
+
+
+/* #mintExerciseTabs { display:flex; } */
+/* #mintExerciseTabs .nav-item { flex:1; text-align:center; } */
+
+/* 修复 mint/exercise tabs 下边线超出 card-header 的问题 */
+.mint-exercise-card .card-header.p-0 .nav-tabs {
+  /* 取消 Bootstrap 的 -1px margin，使下边线不再溢出 header */
+  margin-bottom: 0 !important;
+  /* 保留明确的下边线，便于和 card-body 分隔 */
+  border-bottom: 0px solid var(--bs-border-color, #dee2e6);
+}
+
+/* 修复 tabs 左边界超出 card-header 的问题 */
+.mint-exercise-card .card-header.p-0 {
+  /* 为 header 恢复左右内边距，保证 tabs 不会溢出 */
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  overflow: visible;
+  /* 允许下边线或阴影显示 */
+}
+
+/* 去掉 nav 默认的额外偏移，保证紧贴 header 内边距 */
+.mint-exercise-card .nav,
+.mint-exercise-card .nav-tabs {
+  margin: 0;
+  padding-left: 0;
+  padding-right: 0;
+  border-bottom: 1px solid var(--bs-border-color, #dee2e6);
+}
+
+/* 保持 tab 按钮与卡片边缘对齐 */
+.mint-exercise-card .nav-link {
+  border-radius: 10px;
+}
+
+
+
+
+
+/* 强制覆盖 input 文本颜色（包括 webkit 特性），用于 .ctrl-active */
+input.form-control.ctrl-active,
+input.form-control.ctrl-active:focus,
+input.form-control.ctrl-active:active {
+  color: #0d6efd !important;
+  -webkit-text-fill-color: #0d6efd !important;
+  /* Chrome/Safari 特殊属性 */
+  background-color: #e7f1ff !important;
+  border-color: #0d6efd !important;
+  box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.18) !important;
+  outline: none !important;
+}
+
+input.form-control.ctrl-active::placeholder {
+  color: rgba(13, 110, 253, 0.6) !important;
+}
+
+
+
+/* ===== Pool Parser: 强调 Pool Summary 样式 ===== */
+#pool-parser-result .card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 6px 18px rgba(2, 6, 23, 0.6);
+  border-radius: 8px;
+}
+
+#pool-parser-result .card-body {
+  color: #f8fafc;
+  /* 更亮的字体颜色 */
+  font-size: 0.97rem;
+  /* 略大字体便于阅读 */
+  line-height: 1.45;
+}
+
+#pool-parser-result .card-title {
+  color: #e6eef8;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+}
+
+#pool-parser-result .card-body strong {
+  color: #e2e8f0;
+  font-weight: 700;
+}
+
+#pool-parser-result .font-monospace {
+  color: #cbd5e1;
+  font-weight: 600;
+  word-break: break-all;
+  /* 长地址换行显示 */
+}
+
+#pool-parser-result hr {
+  border-color: rgba(255, 255, 255, 0.06);
+}
+/* ===== Option Parser: 与 OptionPoolTabs / Pool Summary 风格保持一致 ===== */
+#option-parser-result .card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 6px 18px rgba(2, 6, 23, 0.6);
+  border-radius: 8px;
+}
+#option-parser-result .card-body {
+  color: #f8fafc;
+  font-size: 0.97rem;
+  line-height: 1.45;
+  padding: 1rem 1.15rem;
+}
+#option-parser-result .card-title {
+  color: #e6eef8;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+}
+#option-parser-result .card-body strong {
+  color: #e2e8f0;
+  font-weight: 700;
+}
+#option-parser-result .font-monospace {
+  color: #cbd5e1;
+  font-weight: 600;
+  word-break: break-all;
+  white-space: normal;
+}
+
+/* 保持与右侧 tabs 一致的内边距与分隔线 */
+#option-parser-result hr {
+  border-color: rgba(255,255,255,0.06);
+}
+
+/* 小屏适配：地址列换行更友好 */
+@media (max-width: 576px) {
+  #option-parser-result .font-monospace {
+    font-size: 0.85rem;
+    word-break: break-word;
+  }
+}
+/* ===== 让右侧 Option/Pool tabs 风格与左侧一致 ===== */
+/* 适配 OptionPoolTabs 使其和 .mint-exercise-card 下的 tabs 一致 */
+#OptionPoolTabs,
+#OptionPoolTabs .nav,
+#OptionPoolTabs .nav-tabs {
+  margin: 0;
+  padding-left: 0rem;
+  padding-right: 0rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  overflow: visible;
+}
+
+#OptionPoolTabs .nav-link {
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.9);
+  padding: 0.55rem 0.9rem;
+  margin-right: 0px;
+  transition: all 0.18s ease;
+  background: transparent;
+  border: none;
+}
+
+#OptionPoolTabs .nav-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.06);
+}
+
+#OptionPoolTabs .nav-link.active {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: #fff;
+  box-shadow: 0 10px 25px rgba(99, 102, 241, 0.18);
+  border: none;
+}
+
+/* 与左侧 mint-exercise-card 保持一致的细微调整 */
+.mint-exercise-card .nav-link,
+#OptionPoolTabs .nav-link {
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+/* 保证在暗色背景下 tabs 与 card header 对齐 */
+.card-header.p-0>.nav-tabs {
+  margin-bottom: 0 !important;
+  border-bottom: 0;
+}
+/* #mintExerciseTabs .nav-link{
+  border-color: none ;
+}
+#mintExerciseTabs .nav-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(188, 84, 14, 0.06);
+  outline: none !important;
+  border-color: none ;
+}
+#mintExerciseTabs .nav-link:active{
+  border-color: none ;
+} */
+
+
+#mintExerciseTabs .nav-link,
+#mintExerciseTabs .nav-link:focus,
+#mintExerciseTabs .nav-link:active,
+#mintExerciseTabs .nav-link:focus-visible {
+  box-shadow: none !important;
+  /* transform: translateY(-2px); */
+  outline: none !important;
+  border: none !important;
+  /* background: transparent; */
+}
+
+#mintExerciseTabs .nav-link:hover {
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.06);
+  transform: translateY(-2px);
+  outline: none !important;
+  border: none !important;
+}
+
+:root {
+  --swap-size: 64px;       /* 按钮/区块统一尺寸（已有则保留） */
+  --swap-translateY: 6px;  /* 若需向下微调，修改此值 */
+}
+
+/* 强显按钮 + 发光 + 旋转 90deg（默认） */
+.swap-toggle-btn {
+  width: var(--swap-size);
+  height: var(--swap-size);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #5b2fa8 0%, #30143f 100%);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  z-index: 10;
+  box-shadow: 0 10px 30px rgba(99,66,255,0.18), inset 0 -6px 12px rgba(0,0,0,0.35);
+  transition: transform 210ms cubic-bezier(.2,.9,.3,1), box-shadow 210ms ease, filter 210ms ease;
+  transform-origin: 50% 50%;
+  /* 先平移，再旋转（默认旋转 90deg） */
+  transform: translateY(var(--swap-translateY)) rotate(90deg) scale(1);
+  overflow: visible;
+}
+
+/* 发光环 */
+.swap-toggle-btn::after {
+  content: "";
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, rgba(160,96,255,0.26), rgba(160,96,255,0.06) 40%, transparent 60%);
+  filter: blur(10px);
+  opacity: 0.95;
+  transition: opacity 210ms ease, transform 210ms ease;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* 鼠标悬停效果：放大、增强阴影并高亮发光 */
+.swap-toggle-btn:hover {
+  transform: translateY(calc(var(--swap-translateY) + 2px)) rotate(90deg) scale(1.08);
+  box-shadow: 0 18px 46px rgba(99,66,255,0.30), inset 0 -8px 16px rgba(0,0,0,0.45);
+}
+.swap-toggle-btn:hover::after {
+  transform: scale(1.06);
+  opacity: 1;
+}
+
+/* 被切换（swapped）时在原基础上再旋转 180deg（总角度 90 + 180 = 270deg） */
+.swap-toggle-btn.swapped {
+  transform: translateY(var(--swap-translateY)) rotate(270deg) scale(1);
+}
+.swap-toggle-btn.swapped:hover {
+  transform: translateY(calc(var(--swap-translateY) + 2px)) rotate(270deg) scale(1.08);
+}
+
+/* 内部图标尺寸（适配 --swap-size） */
+.swap-toggle-btn i,
+.swap-toggle-btn svg,
+.swap-toggle-btn .swap-double-arrows {
+  width: calc(var(--swap-size) * 0.56);
+  height: calc(var(--swap-size) * 0.56);
+  display: block;
+  color: #fff;
+  line-height: 1;
+}
+
+/* 小屏幕微调 */
+@media (max-width: 576px) {
+  :root { --swap-size: 52px; --swap-translateY: 4px; }
+  .swap-toggle-btn::after { inset: -8px; filter: blur(8px); }
+}
+
+/* swap pane：让 From/To 字体为白色并放大 */
+#pane-swap .small.text-muted {
+  color: #fff !important;
+  font-size: 0.95rem;
+  font-weight: 600;
+  opacity: 0.95;
+  margin-bottom: 0.35rem;
+}
+
+#pane-swap #swap-mint-a,
+#pane-swap #swap-mint-b {
+  color: #fff !important;              /* 主体文字白色 */
+  font-size: 1.05rem;                  /* 稍大字体 */
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  height: var(--swap-size);            /* 与按钮一致高度 */
+  padding-left: 1rem;
+  padding-right: 1rem;
+  box-sizing: border-box;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 保证按钮中的箭头精确居中并放大、可悬停 */
+.swap-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--swap-size);
+  height: var(--swap-size);
+  transform-origin: 50% 50%;
+  /* 保留已有的 transform (translate/rotate) */
+}
+
+/* 图标居中、放大、去掉额外基线偏移 */
+.swap-toggle-btn i,
+.swap-toggle-btn svg,
+.swap-toggle-btn .swap-double-arrows {
+  display: block;
+  line-height: 1;
+  /* vertical-align: middle; */
+  font-size: calc(var(--swap-size) * 0.42); /* 图标大小，可调整 */
+  width: calc(var(--swap-size) * 0.42);
+  height: calc(var(--swap-size) * 0.42);
+  margin: 0;               /* 取消可能的外边距 */
+  transform-origin: 50% 50%;
+}
+
+/* 若使用 SVG 双箭头，确保 stroke 使用 currentColor（白色） */
+.swap-toggle-btn svg path {
+  stroke: currentColor;
+  stroke-width: 1.8;
+}
+
+/* 可选：更明显的悬停高亮（若已有 hover 可省略） */
+.swap-toggle-btn:hover {
+  filter: brightness(1.05);
+  transform: translateY(calc(var(--swap-translateY) + 2px)) rotate(90deg) scale(1.08);
+}
+
+/* 小屏微调 */
+@media (max-width: 576px) {
+  #pane-swap #swap-mint-a,
+  #pane-swap #swap-mint-b { font-size: 0.95rem; height: calc(var(--swap-size) * 0.85); }
+  .swap-toggle-btn i,
+  .swap-toggle-btn svg { font-size: calc(var(--swap-size) * 0.5); width: calc(var(--swap-size) * 0.5); height: calc(var(--swap-size) * 0.5); }
+}
+
+
