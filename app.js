@@ -499,15 +499,15 @@ async function createOption(event) {
     // 记录到日志，若 API 返回了 option_token_mint 则一并记录（并生成 token 跳转）
     logTxSent(sig, data && data.option_token_mint ? data.option_token_mint : null);
 
-    // // Confirm transaction
-    // log("Waiting for confirmation...", 'info');
-    // const confirmation = await connection.confirmTransaction(sig, 'confirmed');
+    // Confirm transaction
+    log("Waiting for confirmation...", 'info');
+    const confirmation = await connection.confirmTransaction(sig, 'confirmed');
 
-    // if (confirmation.value.err) {
-    //   throw new Error(`Transaction failed: ${JSON.stringify(confirmation.value.err)}`);
-    // }
+    if (confirmation.value.err) {
+      throw new Error(`Transaction failed: ${JSON.stringify(confirmation.value.err)}`);
+    }
 
-    // log(`✨ Option created successfully! Transaction: ${sig}`, 'success');
+    log(`✨ Option created successfully! Transaction: ${sig}`, 'success');
     UI.showAlert(`<i class="fas fa-check-circle me-2"></i>Option created successfully! <a href="https://explorer.solana.com/tx/${sig}?cluster=devnet" target="_blank" class="text-decoration-none">View on Explorer</a>`, 'success');
 
     // Reset form
@@ -1269,7 +1269,7 @@ async function parsePoolAccount() {
 
     // swap-pool input 填入 data.creator（若无则回退为解析的 poolAccount）
     const swapPoolInput = document.getElementById('swap-pool');
-    if (swapPoolInput) swapPoolInput.value = poolAccount || '';
+    if (swapPoolInput) swapPoolInput.value = poolAccount ||'';
 
     // 显示结果区域（默认可能已显示）
     const resultBox = document.getElementById('pool-parser-result');
