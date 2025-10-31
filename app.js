@@ -455,7 +455,7 @@ async function createOption(event) {
       creator: wallet.publicKey.toString(),
       underlying_mint: underlyingMint,
       quote_mint: quoteMint,
-      strike_price: Math.floor(strikePrice * 1e6), // Convert to micro units
+      strike_price: strikePrice, // Convert to micro units
       unix_expiration: unixExpiration,
       contract_size: contractSize
     });
