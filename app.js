@@ -949,7 +949,11 @@ async function exerciseOption() {
     log("✍️ Transaction signed", 'success');
 
     // 发送上链
-    const sig = await connection.sendRawTransaction(signedTx.serialize());
+    const sig = await connection.sendRawTransaction(signedTx.serialize(), {
+  skipPreflight: true,
+  preflightCommitment: 'confirmed'
+});
+
     log("Sent tx: " + sig, 'success');
     logTxSent(sig, data && data.option_token_mint ? data.option_token_mint : null);
     // await connection.confirmTransaction(sig);
