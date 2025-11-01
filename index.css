@@ -595,3 +595,9 @@ input.form-control.ctrl-active::placeholder {
     padding: 0 6px;
   }
 }
+
+.hero-logo {
+  height: 140px;
+  width: auto;
+  vertical-align: middle;
+}
